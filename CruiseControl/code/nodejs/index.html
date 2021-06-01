@@ -1,0 +1,297 @@
+<!-- Authors: Hayato Nakamura
+            Yang Hang Liu
+            Arnaud Harmange 
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {background-color: #DDDDDD;}
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;  
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%; 
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        /* Dashed border */
+        hr.dashed {
+        border-top: 3px dashed #bbb;
+        }
+
+        /* Dotted border */
+        hr.dotted {
+        border-top: 3px dotted #bbb;
+        }
+
+        /* Solid border */
+        hr.solid {
+        border-top: 3px solid #bbb;
+        }
+
+        /* Rounded border */
+        hr.rounded {
+        border-top: 8px solid #bbb;
+        border-radius: 5px;
+        }
+
+        .tab { margin-left: 20px; }
+    </style>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        // var num_datapoint = 15;
+        // var thermistor_data = [];
+        // var accelerometer_x = [];
+        // var accelerometer_y = [];
+        // var accelerometer_z = [];
+        // var roll_data = [];
+        // var pitch_data = [];
+        // function displayFunc() {
+        //     $.get("/data", function (data) {
+        //         //console.log(data[1].value)
+        //         for (var i = 0; i < data.length; i++) {
+
+        //             if (data[i].type == "THERM") {
+        //                 // if array reach (let's say) 100, then remove oldest
+        //                 while (thermistor_data.length >= num_datapoint) {
+        //                     thermistor_data.shift();
+        //                 }
+        //                 thermistor_data.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else if (data[i].type == "XAXIS") {
+        //                 while (accelerometer_x.length >= num_datapoint) {
+        //                     accelerometer_x.shift();
+        //                 }
+        //                 accelerometer_x.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else if (data[i].type == "YAXIS") {
+        //                 while (accelerometer_y.length >= num_datapoint) {
+        //                     accelerometer_y.shift();
+        //                 }
+        //                 accelerometer_y.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else if (data[i].type == "ZAXIS") {
+        //                 while (accelerometer_z.length >= num_datapoint) {
+        //                     accelerometer_z.shift();
+        //                 }
+        //                 accelerometer_z.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else if (data[i].type == "ROLL") {
+        //                 while (roll_data.length >= num_datapoint) {
+        //                     roll_data.shift();
+        //                 }
+        //                 roll_data.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else if (data[i].type == "PITCH") {
+        //                 while (pitch_data.length >= num_datapoint) {
+        //                     pitch_data.shift();
+        //                 }
+        //                 pitch_data.push({
+        //                     x: parseFloat(data[i].time),
+        //                     y: parseFloat(data[i].value)
+        //                 })
+        //             } else {
+        //                 console.error("Non supported datafile");
+        //             }
+        //         }
+        //         // console.log(IR_Data)
+        //         var chart_therm = new CanvasJS.Chart("chartContainer_therm", {
+        //             animationEnabled: false,
+        //             title: {
+        //                 text: "Thermistor"
+        //             },
+        //             axisX: {
+        //                 title: "Time (seconds)",
+
+        //             },
+        //             axisY: {
+        //                 title: "Temperature (Celsius)",
+        //             },
+        //             legend: {
+        //                 cursor: "pointer",
+        //                 fontSize: 16,
+        //                 itemclick: toggleDataSeries
+        //             },
+        //             toolTip: {
+        //                 shared: true
+        //             },
+        //             data: [{
+        //                 name: "Thermistor",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: thermistor_data
+        //             }]
+        //         });
+        //         var chart_accel = new CanvasJS.Chart("chartContainer_accel", {
+        //             animationEnabled: false,
+        //             title: {
+        //                 text: "Accelerometer"
+        //             },
+        //             axisX: {
+        //                 title: "Time (seconds)",
+        //             },
+        //             axisY: {
+        //                 title: "Acceleration (m/s^2)",
+
+        //             },
+        //             legend: {
+        //                 cursor: "pointer",
+        //                 fontSize: 16,
+        //                 itemclick: toggleDataSeries
+        //             },
+        //             toolTip: {
+        //                 shared: true
+        //             },
+        //             data: [{
+        //                 name: "X-axis",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: accelerometer_x
+        //             },{
+        //                 name: "Y-axis",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: accelerometer_y
+        //             },{
+        //                 name: "Z-axis",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: accelerometer_z
+        //             }]
+        //         });
+        //         var chart_tilt = new CanvasJS.Chart("chartContainer_tilt", {
+        //             animationEnabled: false,
+        //             title: {
+        //                 text: "Tilt"
+        //             },
+        //             axisX: {
+        //                 title: "Time (seconds)",
+
+        //             },
+        //             axisY: {
+        //                 title: "Tilt (degree)",
+
+        //             },
+        //             legend: {
+        //                 cursor: "pointer",
+        //                 fontSize: 16,
+        //                 itemclick: toggleDataSeries
+        //             },
+        //             toolTip: {
+        //                 shared: true
+        //             },
+        //             data: [{
+        //                 name: "Roll",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: roll_data
+        //             },{
+        //                 name: "Pitch",
+        //                 type: "line",
+        //                 showInLegend: true,
+        //                 dataPoints: pitch_data
+        //             }]
+        //         });
+
+        //         chart_therm.render();
+        //         chart_accel.render();
+        //         chart_tilt.render();
+
+        //         function toggleDataSeries(e) {
+        //             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        //                 e.dataSeries.visible = false;
+        //             }
+        //             else {
+        //                 e.dataSeries.visible = true;
+        //             }
+
+        //             chart_TH.render();
+        //             chart_UL.render();
+        //             chart_IR.render();
+        //         }
+        //     });
+        // }
+        
+        // window.onload = function () {
+        //     var run1 = setInterval("displayFunc()", 2000);
+        // }
+
+        function getOption() { 
+            selectElement =  
+                    document.querySelector('#select1'); 
+                      
+            output = selectElement.value; 
+  
+            document.querySelector('.output').textContent 
+                    = output; 
+            $.post("/postIntensity", {intensity:output});
+        } 
+
+    </script>
+</head>
+<body>
+    <title>EC444: Quest5</title>
+    <h1>EC444: Quest5</h1>
+    <!-- <h3>Real-time Video Stream</h3> -->
+    <!-- <a class="tab" href="http://nakamura-hayato.com:8081" target="_blank">Live Stream from RPi</a> -->
+    <!-- <iframe width="450" height="315" 
+        src="http://nakamura-hayato.com:8081/"
+        frameborder="1" allowfullscreen>
+    </iframe> -->
+
+    <hr class="solid">
+    <h3>Buggy Master Control</h3>
+    <select class="tab" id="select1"> 
+        <option value="0">Stop</option> 
+        <option value="1">Start</option> 
+    </select> 
+    <button onclick="getOption()"> 
+        Change Buggy Status (START/STOP)
+    </button> 
+    <p class="tab"> 
+        Buggy is currently: 
+        <span class="output"></span> 
+    </p> 
+    <hr class="solid">
+
+    <!-- <h3>Real-time Sensor Data</h3>
+    <div id="chartContainer_therm" style="height: 400px; width: 100%;"></div>
+    <div id="chartContainer_accel" style="height: 400px; width: 100%;"></div>
+    <div id="chartContainer_tilt" style="height: 400px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
+</body>
+</html>

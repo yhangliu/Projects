@@ -1,0 +1,161 @@
+<!-- Authors: Hayato Nakamura
+            Yang Hang Liu
+            Arnaud Harmange 
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        var UL_Data = [];
+        var IR_Data = [];
+        var TH_Data = [];
+        function displayFunc() {
+            $.get("/data", function (data) {
+                //console.log(data[1].value)
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].type == "UL") {
+                        // if array reach (let's say) 100, then remove oldest
+                        while (UL_Data.length >= 100) {
+                            UL_Data.shift();
+                        }
+                        UL_Data.push({
+                            x: parseFloat(data[i].time),
+                            y: parseFloat(data[i].value)
+                        })
+                    }
+                    else if (data[i].type == "IR") {
+                        while (IR_Data.length >= 100) {
+                            IR_Data.shift();
+                        }
+                        IR_Data.push({
+                            x: parseFloat(data[i].time),
+                            y: parseFloat(data[i].value)
+                        })
+                    }
+                    else if (data[i].type == "TH") {
+                        while (TH_Data.length >= 100) {
+                            TH_Data.shift();
+                        }
+                        TH_Data.push({
+                            x: parseFloat(data[i].time),
+                            y: parseFloat(data[i].value)
+                        })
+                    }
+                }
+                console.log(IR_Data)
+                var chart_TH = new CanvasJS.Chart("chartContainer_TH", {
+                    animationEnabled: false,
+                    title: {
+                        text: "Thermistor"
+                    },
+                    axisX: {
+                        title: "Time (seconds)",
+
+                    },
+                    axisY: {
+                        title: "Temperature (Celsius)",
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        fontSize: 16,
+                        itemclick: toggleDataSeries
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    data: [{
+                        name: "Thermistor",
+                        type: "line",
+                        showInLegend: true,
+                        dataPoints: TH_Data
+                    }]
+                });
+                var chart_UL = new CanvasJS.Chart("chartContainer_UL", {
+                    animationEnabled: false,
+                    title: {
+                        text: "Ultrasonic"
+                    },
+                    axisX: {
+                        title: "Time (seconds)",
+                    },
+                    axisY: {
+                        title: "Distance (meters)",
+
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        fontSize: 16,
+                        itemclick: toggleDataSeries
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    data: [{
+                        name: "Ultrasonic",
+                        type: "line",
+                        showInLegend: true,
+                        dataPoints: UL_Data
+                    }]
+                });
+                var chart_IR = new CanvasJS.Chart("chartContainer_IR", {
+                    animationEnabled: false,
+                    title: {
+                        text: "IR Rangefinder"
+                    },
+                    axisX: {
+                        title: "Time (seconds)",
+
+                    },
+                    axisY: {
+                        title: "Distance (meters)",
+
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        fontSize: 16,
+                        itemclick: toggleDataSeries
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    data: [{
+                        name: "IR Rangefinder",
+                        type: "line",
+                        showInLegend: true,
+                        dataPoints: IR_Data
+                    }]
+                });
+
+                chart_TH.render();
+                chart_UL.render();
+                chart_IR.render();
+
+                function toggleDataSeries(e) {
+                    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                        e.dataSeries.visible = false;
+                    }
+                    else {
+                        e.dataSeries.visible = true;
+                    }
+
+                    chart_TH.render();
+                    chart_UL.render();
+                    chart_IR.render();
+                }
+            });
+        }
+        window.onload = function () {
+            setInterval(displayFunc, 2000);
+        }
+
+    </script>
+</head>
+<body>
+    <div id="chartContainer_TH" style="height: 400px; width: 100%;"></div>
+    <div id="chartContainer_UL" style="height: 400px; width: 100%;"></div>
+    <div id="chartContainer_IR" style="height: 400px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!-- Authors: Hayato Nakamura
+    Yang Hang Liu
+    Arnaud Harmange 
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {background-color: #DDDDDD;}
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+/* Dashed border */
+hr.dashed {
+border-top: 3px dashed #bbb;
+}
+
+/* Dotted border */
+hr.dotted {
+border-top: 3px dotted #bbb;
+}
+
+/* Solid border */
+hr.solid {
+border-top: 3px solid #bbb;
+}
+
+/* Rounded border */
+hr.rounded {
+border-top: 8px solid #bbb;
+border-radius: 5px;
+}
+
+.tab { margin-left: 20px; }
+</style>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+/*
+var fob_1 = [];
+var fob_2 = [];
+var fob_3 = [];
+var fob_4 = [];
+var fob_5 = [];
+var fob_6 = [];
+var red = 0;
+var green = 0;
+var blue = 0;
+*/
+var fob_1 = 0;
+var fob_2 = 0;
+var fob_3 = 0;
+
+var string = "";
+function displayFunc() {
+    $.get("/data", function (data) {
+        console.log(data[0]);
+        fob_1 = 0;
+        fob_2 = 0;
+        fob_3 = 0;
+
+        string = "";
+        for (var i = 0; i < data.length; i++) {
+            string = string.concat("fob ", data[i].fob_ID);
+
+            if (data[i].vote == 'R') {
+                fob_1++;
+                string = string.concat(" voted for Red ");
+            } else if (data[i].vote == 'G') {
+                fob_2++;
+                string = string.concat(" voted for Green ");
+            } else if (data[i].vote == 'B') {
+                fob_3++;
+                string = string.concat(" voted for Blue ");
+            }
+
+            string = string.concat("at ", data[i].time);
+            string = string.concat("\n");
+
+        }
+        // console.log(IR_Data)
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+
+            title: {
+                text: "Candidate Vote Counts "
+            },
+            axisX: {
+                interval: 1,
+            },
+
+            axisY2: {
+                interlacedColor: "rgba(1,77,101,.2)",
+                gridColor: "rgba(1,77,101,.1)",
+                title: "Number of Votes",
+                interval: 1
+            },
+            data: [{
+                type: "bar",
+                name: "candidates",
+                axisYType: "secondary",
+                dataPoints: [
+                    { y: fob_3, label: "B", color: "blue" },
+                    { y: fob_2, label: "G", color: "green" },
+                    { y: fob_1, label: "R", color: "red" }
+
+                ]
+            }]
+        });
+        chart.render();
+        //console.log(string);
+        string = string.replace(/(\r\n|\n|\r)/gm, "<br>")
+        document.getElementById("total_votes").innerHTML = string;
+
+
+
+
+
+
+        
+    });
+}
+
+window.onload = function () {
+    var run1 = setInterval("displayFunc()", 2000);
+}
+
+function getOption() {
+    $.post("/postIntensity");
+} 
+
+</script>
+</head>
+<body>
+<title>EC444: Quest4</title>
+<h1>EC444: Quest4</h1>
+
+
+<hr class="solid">
+<input id="Reset Votes" type="button" value="Reset Votes" onclick="getOption();" />
+
+
+<hr class="solid">
+
+<h3>Real-time Election Data</h3>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<p id="total_votes"> </p>
+
+</body>
+</html>

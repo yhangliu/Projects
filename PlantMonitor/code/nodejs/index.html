@@ -1,0 +1,191 @@
+<!-- Authors: Hayato Nakamura
+    Yang Hang Liu
+    Arnaud Harmange 
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {background-color: #DDDDDD;}
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+/* Dashed border */
+hr.dashed {
+border-top: 3px dashed #bbb;
+}
+
+/* Dotted border */
+hr.dotted {
+border-top: 3px dotted #bbb;
+}
+
+/* Solid border */
+hr.solid {
+border-top: 3px solid #bbb;
+}
+
+/* Rounded border */
+hr.rounded {
+border-top: 8px solid #bbb;
+border-radius: 5px;
+}
+
+.tab { margin-left: 20px; }
+</style>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+
+    var first_ready = 0;
+    var MAX_DATA = 2;
+    var DATA_START = 0;
+
+    var string = "";
+    var string2 = "";
+
+    var run1 = setInterval("displayFunc()", 2000);
+    var run2;
+function displayFunc() {
+    $.get("/data", function (data) {
+
+        string = "";
+        if (data.length > MAX_DATA) {
+            DATA_START = data.length - MAX_DATA;
+        }
+        for (var i = DATA_START; i < data.length; i++) {
+            if (data[i].ready == 0) {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | Not ready for harvest yet\n");
+            }
+            else if (data[i].ready == 1 && first_ready != 0) {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | READY FOR HARVEST\n");
+            }
+            else {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | READY FOR HARVEST\n");
+                first_ready = data[i].time;
+                string2 = string2.concat("Beansprout first ready for harvest at ", first_ready);
+                raiseflag();
+            }
+        }
+
+        //console.log(string);
+        string = string.replace(/(\r\n|\n|\r)/gm, "<br>")
+        document.getElementById("beansprout_data").innerHTML = string;
+
+        if (first_ready != 0) {
+            string2 = string2.replace(/(\r\n|\n|\r)/gm, "<br>")
+            document.getElementById("first_ready").innerHTML = string2;
+        }
+    });
+}
+    function displayAll() {
+        $.get("/data", function (data) {
+        string = "";
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].ready == 0) {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | Not ready for harvest yet\n");
+            }
+            else if (data[i].ready == 1 && first_ready != 0) {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | READY FOR HARVEST\n");
+            }
+            else {
+                string = string.concat("Temperature at ", data[i].time, " is ", data[i].temp, " degrees Celsius | READY FOR HARVEST\n");
+                first_ready = data[i].time;
+                string2 = string2.concat("Beansprout first ready for harvest at ", first_ready);
+                raiseflag();
+            }
+        }
+
+        //console.log(string);
+        string = string.replace(/(\r\n|\n|\r)/gm, "<br>")
+        document.getElementById("beansprout_data").innerHTML = string;
+
+        if (first_ready != 0) {
+            string2 = string2.replace(/(\r\n|\n|\r)/gm, "<br>")
+            document.getElementById("first_ready").innerHTML = string2;
+            }
+        });
+    }
+
+    function resetDB() {
+        $.post("/postDB");
+        setTimeout(resetFirstReady, 4000)
+    } 
+
+    function resetFirstReady() {
+        first_ready = 0;
+        string2 = "";
+        string2 = string2.replace(/(\r\n|\n|\r)/gm, "<br>")
+        document.getElementById("first_ready").innerHTML = string2;
+    }
+
+    function getAll() {
+        clearInterval(run1);
+        clearInterval(run2);
+        run2 = setInterval("displayAll()", 2000);
+    } 
+
+    function getMax() {
+        clearInterval(run1);
+        clearInterval(run2);
+        run1 = setInterval("displayFunc()", 2000);
+    }
+
+    function ledPower() {
+    $.post("/postLED");
+    }
+
+    function raiseflag() {
+    $.post("/postFlagUp");
+    }
+
+</script>
+</head>
+<body>
+    <title>EC444 Quest 5: Beansprout Monitor by Team 9</title>
+    <h1>EC444 Quest 5: Beansprout Monitor by Team 9</h1>
+    <h3>Real-time Video Stream</h3>
+    <a class="tab" href="http://nakamura-hayato.com:8081" target="_blank">Live Stream from RPi</a>
+    <!-- <iframe width="450" height="315"
+        src="http://nakamura-hayato.com:8081/"
+        frameborder="1" allowfullscreen>
+    </iframe> -->
+    <hr class="solid">
+    <input id="Reset Data" type="button" value="Reset Data" onclick="resetDB();" />
+    <input id="View All Data" type="button" value="View All Data" onclick="getAll();" />
+    <input id="View Less" type="button" value="View Less" onclick="getMax();" />
+    <input id="LED On/Off" type="button" value="LED On/Off" onclick="ledPower();" />
+    <p id="first_ready"> </p>
+    <hr class="solid">
+    <h3>Real-time Beansprout Data</h3>
+    <p id="beansprout_data"> </p>
+
+</body>
+</html>
