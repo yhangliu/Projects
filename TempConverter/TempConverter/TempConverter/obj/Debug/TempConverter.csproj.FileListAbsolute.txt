@@ -1,0 +1,14 @@
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\obj\Debug\TempConverter.csprojAssemblyReference.cache
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\obj\Debug\TempConverter.csproj.CoreCompileInputs.cache
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\bin\TempConverter.dll.config
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\bin\TempConverter.dll
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\bin\TempConverter.pdb
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\obj\Debug\TempConverter.dll
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\Lab3\obj\Debug\TempConverter.pdb
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\obj\Debug\TempConverter.csprojAssemblyReference.cache
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\obj\Debug\TempConverter.csproj.CoreCompileInputs.cache
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\obj\Debug\TempConverter.dll
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\obj\Debug\TempConverter.pdb
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\bin\TempConverter.dll.config
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\bin\TempConverter.dll
+C:\Users\Hang\Documents\GitHub\Projects\TempConverter\TempConverter\TempConverter\bin\TempConverter.pdb
